@@ -1,9 +1,9 @@
 # Maintainer: DarkXero
 
-pkgname=xero-calamares-test
+pkgname=calamares-app
 _pkgname=calamares
 pkgver=3.3.0.230306
-pkgrel=4
+pkgrel=1
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
 license=(GPL)
