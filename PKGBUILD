@@ -2,7 +2,7 @@
 
 pkgname=calamares-app
 _pkgname=calamares
-pkgver=3.3.0.230629
+pkgver=3.3.0.230703
 pkgrel=2
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source=($pkgname::git+https://github.com/calamares/calamares#commit=e716144)
+source=($pkgname::git+https://github.com/calamares/calamares#commit=f00fa42)
 sha256sums=('SKIP')
 #	"calamares.desktop"
 
