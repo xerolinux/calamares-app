@@ -2,7 +2,7 @@
 
 pkgname=calamares-app
 _pkgname=calamares
-pkgver=3.3.0.230703
+pkgver=3.3.0.230704
 pkgrel=2
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
@@ -24,14 +24,15 @@ sha256sums=('SKIP')
 
 prepare() {
 
-	cp -rv ../modules/* ${srcdir}/$_pkgname-${pkgver}/src/modules/
+	cp -rv ../modules/* ${srcdir}/$pkgname/src/modules/
 
 	# patches here
-	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
-	sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
-	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${_pkgname}-${pkgver}/src/modules/fstab/main.py"
+	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${pkgname}/CMakeLists.txt"
+	sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${pkgname}/CMakeLists.txt"
+	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${pkgname}/src/modules/fstab/main.py"
 
 	# change version
+	cd ${srcdir}/$pkgname/src/
 	_ver="$(cat CMakeLists.txt | grep -m3 -e "  VERSION" | grep -o "[[:digit:]]*" | xargs | sed s'/ /./g')"
 	sed -i -e "s|\${CALAMARES_VERSION_MAJOR}.\${CALAMARES_VERSION_MINOR}.\${CALAMARES_VERSION_PATCH}|${_ver}-${pkgrel}|g" CMakeLists.txt
 	sed -i -e "s|CALAMARES_VERSION_RC 1|CALAMARES_VERSION_RC 0|g" CMakeLists.txt
@@ -60,9 +61,9 @@ build() {
 }
 
 package() {
+    install -Dm755 "../calamares_polkit" "$pkgdir/usr/bin/calamares_polkit"
 	cd ${srcdir}/$pkgname/build
 	make DESTDIR="$pkgdir" install
-	install -Dm755 "$srcdir/calamares_polkit" "$pkgdir/usr/bin/calamares_polkit"
 	rm "${srcdir}/$pkgname/calamares.desktop"
 	rm "$pkgdir/usr/share/applications/calamares.desktop"
 
