@@ -18,9 +18,8 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source=($pkgname::git+https://github.com/calamares/calamares#commit=e78f884)
-sha256sums=('SKIP')
-	"calamares_polkit"
+source=($pkgname::git+https://github.com/calamares/calamares#commit=e78f884
+        "calamares_polkit")
 
 prepare() {
 
@@ -68,3 +67,5 @@ package() {
 	rm "$pkgdir/usr/share/applications/calamares.desktop"
 
 }
+sha256sums=('SKIP'
+            'e61245ff7e4c3af6f05a9fe9a3fcf47f2780d9aa88c11eab02a35fac446cf1e1')
