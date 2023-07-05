@@ -20,18 +20,19 @@ backup=('usr/share/calamares/modules/bootloader.conf'
 
 source=($pkgname::git+https://github.com/calamares/calamares#commit=f00fa42)
 sha256sums=('SKIP')
-#	"calamares.desktop"
+	"calamares_polkit"
 
 prepare() {
-	cd ${srcdir}/$pkgname
-	sed -i -e 's/Install packages/Updating System (Might Take a While...)/' "$srcdir/${pkgname}/src/modules/packages/main.py"
-	#sed -i 's/,\ self.line_cb//g'  "$srcdir/${_pkgname}-${pkgver}/src/modules/packages/main.py"
+
+	cp -rv ../modules/* ${srcdir}/$_pkgname-${pkgver}/src/modules/
 
 	# patches here
+	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
+	sed -i -e 's/# DEBUG_FILESYSTEMS/DEBUG_FILESYSTEMS/' "$srcdir/${_pkgname}-${pkgver}/CMakeLists.txt"
+	sed -i -e "s/desired_size = 512 \* 1024 \* 1024  \# 512MiB/desired_size = 512 \* 1024 \* 1024 \* 4  \# 2048MiB/" "$srcdir/${_pkgname}-${pkgver}/src/modules/fstab/main.py"
 
 	# change version
 	_ver="$(cat CMakeLists.txt | grep -m3 -e "  VERSION" | grep -o "[[:digit:]]*" | xargs | sed s'/ /./g')"
-	#printf 'Version: %s-%s' "${_ver}" "${pkgrel}"
 	sed -i -e "s|\${CALAMARES_VERSION_MAJOR}.\${CALAMARES_VERSION_MINOR}.\${CALAMARES_VERSION_PATCH}|${_ver}-${pkgrel}|g" CMakeLists.txt
 	sed -i -e "s|CALAMARES_VERSION_RC 1|CALAMARES_VERSION_RC 0|g" CMakeLists.txt
 
@@ -61,17 +62,8 @@ build() {
 package() {
 	cd ${srcdir}/$pkgname/build
 	make DESTDIR="$pkgdir" install
+	install -Dm755 "$srcdir/calamares_polkit" "$pkgdir/usr/bin/calamares_polkit"
 	rm "${srcdir}/$pkgname/calamares.desktop"
 	rm "$pkgdir/usr/share/applications/calamares.desktop"
-	#install -Dm644 "../data/manjaro-icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
-	#install -Dm644 "../data/calamares.desktop" "$pkgdir/usr/share/applications/calamares.desktop"
-	#install -Dm755 "../data/calamares_polkit" "$pkgdir/usr/bin/calamares_polkit"
-	#install -Dm644 "../data/49-nopasswd-calamares.rules" "$pkgdir/etc/polkit-1/rules.d/49-nopasswd-calamares.rules"
-	#chmod 750      "$pkgdir"/etc/polkit-1/rules.d
 
-	# rename services-systemd back to services
-	#mv "$pkgdir/usr/lib/calamares/modules/services-systemd" "$pkgdir/usr/lib/calamares/modules/services"
-	#mv "$pkgdir/usr/share/calamares/modules/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
-	#sed -i -e 's/-systemd//' "$pkgdir/usr/lib/calamares/modules/services/module.desc"
-	#sed -i -e 's/-systemd//' "$pkgdir/usr/share/calamares/settings.conf"
 }
