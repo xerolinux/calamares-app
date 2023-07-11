@@ -2,7 +2,7 @@
 
 pkgname=calamares-app
 _pkgname=calamares
-pkgver=3.3.0.230705
+pkgver=3.3.0.230710
 pkgrel=2
 pkgdesc='Distribution-independent installer framework'
 arch=('i686' 'x86_64')
@@ -18,7 +18,7 @@ backup=('usr/share/calamares/modules/bootloader.conf'
         'usr/share/calamares/modules/initcpio.conf'
         'usr/share/calamares/modules/unpackfs.conf')
 
-source=($pkgname::git+https://github.com/calamares/calamares#commit=e78f884
+source=($pkgname::git+https://github.com/calamares/calamares#commit=11e1659
         "calamares_polkit")
 
 prepare() {
